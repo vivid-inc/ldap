@@ -1,4 +1,4 @@
-# Copyright Vivid Inc. Released under the terms of the BSD license.
+# Copyright Vivid Inc. Released under the terms of the Apache 2.0 license.
 #
 # Defines a mail alias list structural object and its attendant attributes.
 # Useful for receiving mail on virtual email addresses (mail aliases) and
@@ -52,7 +52,7 @@
 
 # Changelog:
 # 20191120
-#     - Released as Open Source under the terms of the BSD license.
+#     - Released as Open Source under the terms of the Apache 2.0 license.
 # 20140626
 #     - First written.
 
