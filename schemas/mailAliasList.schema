@@ -2,8 +2,14 @@
 #
 # Defines a mail alias list structural object and its attendant attributes.
 # Useful for receiving mail on virtual email addresses (mail aliases) and
-# forwarding to actual email accounts. This schema depends on core.schema.
-
+# forwarding to actual email accounts.
+#
+# This schema depends on core.schema. It has been battle-tested in
+# production on OpenLDAP for several years prior to being open-sourced.
+# The object class and attribute types are namespaced within Vivid Inc.'s
+# own IANA-assigned Private Enterprise Number (PEN) 54908, listed at
+# https://www.iana.org/assignments/enterprise-numbers/enterprise-numbers
+#
 # Example:
 # Here is an example LDAP object record utilizing the `mailAliasList'
 # structural object. An email received at any of the `mailAlias' email
@@ -33,9 +39,9 @@
 #     server_host = ldap-server.internal.acme.com
 #     server_port = 389
 #
-#     # Upon receipt of an incoming email, take its TO: email address, and
-#     # substitute that into the `query_filter'. Search for all matching LDAP
-#     # record under `search_base'.
+#     # Upon receipt of an incoming email, take its TO: email address
+#     # and substitute that into the `query_filter'. Search for all
+#     # matching LDAP records under `search_base' using that filter.
 #     search_base = ou=mailaliases,dc=acme,dc=com
 #     query_filter = (mailAlias=%s)
 #
@@ -49,26 +55,28 @@
 # schema provides is the structuring within your mail alias list object
 # DNs for mapping virtual email aliases to forwarding email addresses,
 # ready for consumption by your MTA, etc.
-
+#
+# To add this schema to OpenLDAP see the corresponding `mailAliasList.ldif'.
+#
 # Changelog:
 # 20191120
+#     - Formally organized under Vivid's IANA PEN 1.3.6.1.4.1.54908.
 #     - Released as Open Source under the terms of the Apache 2.0 license.
 # 20140626
-#     - First written.
+#     - First authored.
 
-attributetype ( 1.3.6.1.4.1.54908.1.1.1 NAME 'memberDn'
-        DESC 'Alias redirects to members identified by DN'
-        EQUALITY distinguishedNameMatch
-        SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 )
-
-attributetype ( 1.3.6.1.4.1.54908.1.1.3 NAME 'mailAlias'
+attributetype ( 1.3.6.1.4.1.54908.1.1.1 NAME 'mailAlias'
         DESC 'Mail address alias'
         EQUALITY caseIgnoreIA5Match
         SUBSTR caseIgnoreIA5SubstringsMatch
         SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
 
-objectclass ( 1.3.6.1.4.1.54908.1.1.2 NAME 'mailAliasList'
+attributetype ( 1.3.6.1.4.1.54908.1.1.2 NAME 'memberDn'
+        DESC 'Alias redirects to members identified by DN'
+        EQUALITY distinguishedNameMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 )
+
+objectclass ( 1.3.6.1.4.1.54908.1.1.3 NAME 'mailAliasList'
         DESC 'Email address alias redirection list'
         SUP top STRUCTURAL
-        MUST ( cn $ description $ mailAlias )
-        MAY memberDn )
+        MAY ( mailAlias $ memberDn ) )

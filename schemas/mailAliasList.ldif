@@ -1,0 +1,21 @@
+# Copyright Vivid Inc. Released under the terms of the Apache 2.0 license.
+#
+# See `mailAliasList.schema' for details.
+#
+# To add this schema to OpenLDAP using its dynamic runtime configuration
+# engine "olc" introduced in version OpenLDAP 2.3:
+#
+#     slapadd -n 0 -l mailAliasList.ldif
+
+dn: cn=mailaliaslist,cn=schema,cn=config
+objectClass: olcSchemaConfig
+cn: mailaliaslist
+olcAttributeTypes: {0}( 1.3.6.1.4.1.54908.1.1.1 NAME 'mailAlias' DESC 'Mail 
+ address alias' EQUALITY caseIgnoreIA5Match SUBSTR caseIgnoreIA5SubstringsMa
+ tch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+olcAttributeTypes: {1}( 1.3.6.1.4.1.54908.1.1.2 NAME 'memberDn' DESC 'Alias 
+ redirects to members identified by DN' EQUALITY distinguishedNameMatch SYNT
+ AX 1.3.6.1.4.1.1466.115.121.1.12 )
+olcObjectClasses: {0}( 1.3.6.1.4.1.54908.1.1.3 NAME 'mailAliasList' DESC 'Em
+ ail address alias redirection list' SUP top STRUCTURAL MAY ( mailAlias $ me
+ mberDn ) )
