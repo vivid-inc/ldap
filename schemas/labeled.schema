@@ -1,0 +1,26 @@
+# Copyright Vivid Inc. Released under the terms of the Apache 2.0 license.
+#
+# LDAP schema defining a label structural object and its corresponding attribute.
+# Useful for adding ad-hoc, free-form labels to records without semantic limitation.
+# An example LDAP record utilizing the `labeled' structural object class:
+#
+#     |-- objectClass: labeled
+#         ...
+#         label: X3-working-group
+#         label: tentative
+#
+# Changelog:
+# 20191120
+#     - Formally organized under Vivid's IANA PEN 1.3.6.1.4.1.54908.
+#     - Released as Open Source under the terms of the Apache 2.0 license.
+
+attributetype ( 1.3.6.1.4.1.54908.1.2.1 NAME 'label'
+        DESC 'Free-form label'
+        EQUALITY caseIgnoreIA5Match
+        SUBSTR caseIgnoreIA5SubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+
+objectclass ( 1.3.6.1.4.1.54908.1.2.2 NAME 'labeled'
+        DESC 'Arbitrary labeling of record objects'
+        SUP top STRUCTURAL
+        MAY label )
