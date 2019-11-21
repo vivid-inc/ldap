@@ -12,6 +12,6 @@ objectClass: olcSchemaConfig
 cn: labeled
 olcAttributeTypes: {0}( 1.3.6.1.4.1.54908.1.2.1 NAME 'label' DESC 'Free-form
   label' EQUALITY caseIgnoreIA5Match SUBSTR caseIgnoreIA5SubstringsMatch SYN
- TAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+ TAX 1.3.6.1.4.1.1466.115.121.1.26{32768} )
 olcObjectClasses: {0}( 1.3.6.1.4.1.54908.1.2.2 NAME 'labeled' DESC 'Arbitrar
- y labeling of record objects' SUP top STRUCTURAL MAY label )
+ y labeling of record objects' SUP top AUXILIARY MAY label )

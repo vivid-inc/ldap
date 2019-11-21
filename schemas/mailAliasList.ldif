@@ -17,5 +17,5 @@ olcAttributeTypes: {1}( 1.3.6.1.4.1.54908.1.1.2 NAME 'memberDn' DESC 'Alias
  redirects to members identified by DN' EQUALITY distinguishedNameMatch SYNT
  AX 1.3.6.1.4.1.1466.115.121.1.12 )
 olcObjectClasses: {0}( 1.3.6.1.4.1.54908.1.1.3 NAME 'mailAliasList' DESC 'Em
- ail address alias redirection list' SUP top STRUCTURAL MAY ( mailAlias $ me
- mberDn ) )
+ ail address alias redirection list' SUP top STRUCTURAL MUST cn MAY ( mailAl
+ ias $ memberDn $ description ) )

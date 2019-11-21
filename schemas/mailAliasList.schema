@@ -1,8 +1,8 @@
 # Copyright Vivid Inc. Released under the terms of the Apache 2.0 license.
 #
-# Defines a mail alias list structural object and its attendant attributes.
-# Useful for receiving mail on virtual email addresses (mail aliases) and
-# forwarding to actual email accounts.
+# An LDAP schema defining a mail alias list structural object class and
+# its attendant attributes. Useful for receiving mail on virtual email
+# addresses (mail aliases) and forwarding to actual email accounts.
 #
 # This schema depends on core.schema. It has been battle-tested in
 # production on OpenLDAP for several years prior to being open-sourced.
@@ -12,7 +12,7 @@
 #
 # Example:
 # Here is an example LDAP object record utilizing the `mailAliasList'
-# structural object. An email received at any of the `mailAlias' email
+# object class. An email received at any of the `mailAlias' email
 # addresses would be redirected to every one of the email addresses
 # associated with the `memberDn' user accounts. The redirection is
 # performed by a mail daemon (MTA) configured to consult these
@@ -79,4 +79,5 @@ attributetype ( 1.3.6.1.4.1.54908.1.1.2 NAME 'memberDn'
 objectclass ( 1.3.6.1.4.1.54908.1.1.3 NAME 'mailAliasList'
         DESC 'Email address alias redirection list'
         SUP top STRUCTURAL
-        MAY ( mailAlias $ memberDn ) )
+        MUST cn
+        MAY ( mailAlias $ memberDn $ description ) )
