@@ -1,0 +1,74 @@
+# Copyright Vivid Inc. Released under the terms of the BSD license.
+#
+# Defines a mail alias list structural object and its attendant attributes.
+# Useful for receiving mail on virtual email addresses (mail aliases) and
+# forwarding to actual email accounts. This schema depends on core.schema.
+
+# Example:
+# Here is an example LDAP object record utilizing the `mailAliasList'
+# structural object. An email received at any of the `mailAlias' email
+# addresses would be redirected to every one of the email addresses
+# associated with the `memberDn' user accounts. The redirection is
+# performed by a mail daemon (MTA) configured to consult these
+# `mailAliasList` LDAP records.
+#
+#     |-- dn: ou=mailaliases,dc=acme,dc=com
+#         |-- dn: cn=maintainers,ou=mailaliases,dc=acme,dc=com
+#             objectClass: mailAliasList
+#             cn: maintainers
+#             mailAlias: bugs@acme.com
+#             mailAlias: feedback@acme.com
+#             mailAlias: developers@acme.com
+#             memberDn: uid=m.laurent,ou=accounts,dc=acme,dc=com
+#             memberDn: uid=stephane,ou=accounts,dc=acme,dc=com
+#
+# Postfix configuration `/etc/postfix/ldap-aliases.cf' for the above pattern:
+#
+#     # Query mail aliases as lists of user objects containing addresses.
+#     # Can be tested with:
+#     #     bash$ postmap -vq feedback@acme.com ldap:/etc/postfix/ldap-aliases.cf
+#     # More information at http://www.postfix.org/LDAP_README.html
+#     bind = no
+#     version = 3
+#     server_host = ldap-server.internal.acme.com
+#     server_port = 389
+#
+#     # Upon receipt of an incoming email, take its TO: email address, and
+#     # substitute that into the `query_filter'. Search for all matching LDAP
+#     # record under `search_base'.
+#     search_base = ou=mailaliases,dc=acme,dc=com
+#     query_filter = (mailAlias=%s)
+#
+#     # `result_attribute' says: The email address stored in the `mail'
+#     # attribute is read from `memberDn'.
+#     special_result_attribute = memberDn
+#     result_attribute = mail
+#
+# You can choose the mail alias list object DN organization as well as
+# how the actual mail addresses of member DNs are stored. What this LDAP
+# schema provides is the structuring within your mail alias list object
+# DNs for mapping virtual email aliases to forwarding email addresses,
+# ready for consumption by your MTA, etc.
+
+# Changelog:
+# 20191120
+#     - Released as Open Source under the terms of the BSD license.
+# 20140626
+#     - First written.
+
+attributetype ( 1.3.6.1.4.1.54908.1.1.1 NAME 'memberDn'
+        DESC 'Alias redirects to members identified by DN'
+        EQUALITY distinguishedNameMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 )
+
+attributetype ( 1.3.6.1.4.1.54908.1.1.3 NAME 'mailAlias'
+        DESC 'Mail address alias'
+        EQUALITY caseIgnoreIA5Match
+        SUBSTR caseIgnoreIA5SubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+
+objectclass ( 1.3.6.1.4.1.54908.1.1.2 NAME 'mailAliasList'
+        DESC 'Email address alias redirection list'
+        SUP top STRUCTURAL
+        MUST ( cn $ description $ mailAlias )
+        MAY memberDn )
